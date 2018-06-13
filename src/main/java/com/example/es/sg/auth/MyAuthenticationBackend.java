@@ -6,12 +6,15 @@ import com.floragunn.searchguard.auth.AuthenticationBackend;
 import com.floragunn.searchguard.user.AuthCredentials;
 import com.floragunn.searchguard.user.User;
 import com.google.common.collect.Lists;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchSecurityException;
 import org.elasticsearch.common.settings.Settings;
 
 import java.nio.file.Path;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 
 public class MyAuthenticationBackend implements AuthenticationBackend {
@@ -28,7 +31,14 @@ public class MyAuthenticationBackend implements AuthenticationBackend {
     public MyAuthenticationBackend(final Settings settings, final Path configPath) {
         super();
         log.info("Starting up authentication backend: {}, {}", settings, configPath);
-        database = new Database();
+        
+        this.database = AccessController.doPrivileged(new PrivilegedAction<Database>() {
+            
+            @Override
+            public Database run() {       
+                return new Database();
+            }
+        });
     }
 
     protected Database getDatabase() {

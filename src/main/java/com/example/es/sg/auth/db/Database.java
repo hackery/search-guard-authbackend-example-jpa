@@ -16,11 +16,23 @@ public class Database {
     protected final EntityManager entityManager;
 
     public Database() {
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
         entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         entityManager = entityManagerFactory.createEntityManager();
     }
 
     public BackendUser getUser(String userId) {
+        
+        //hack to make sure the admin user exists
+        try {
+            EntityTransaction tx = entityManager.getTransaction();
+            tx.begin();
+            entityManager.persist(new BackendUser("admin","admin","admin"));
+            tx.commit();
+        } catch (Throwable e) {
+            System.out.println("User already exists: "+e.getMessage());
+        }
+        
         //User user = entityManager.find(User.class, userId);
         BackendUser user = entityManager
                 .createQuery( "from USERS where userId = :userId", BackendUser.class )
