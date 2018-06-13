@@ -4,19 +4,7 @@ searchguard:
       anonymous_auth_enabled: false
       xff:
         enabled: false
-        internalProxies: "192\\.168\\.0\\.10|192\\.168\\.0\\.11"
-        remoteIpHeader: "x-forwarded-for"
-        proxiesHeader: "x-forwarded-by"
     authc:
-      basic_internal_auth_domain:
-        http_enabled: true
-        transport_enabled: true
-        order: 4
-        http_authenticator:
-          type: "basic"
-          challenge: true
-        authentication_backend:
-          type: "intern"
       my-auth:
         enabled: true
         http_enabled: true
