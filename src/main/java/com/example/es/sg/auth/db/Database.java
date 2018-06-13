@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 public class Database {
     private static final String PERSISTENCE_UNIT_NAME = "com.example.db.users";
@@ -16,7 +18,14 @@ public class Database {
     protected final EntityManager entityManager;
 
     public Database() {
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        if (System.getProperty("example.usePrivileged", "false").matches("true")) {
+            entityManagerFactory = AccessController.doPrivileged(
+                    (PrivilegedAction<EntityManagerFactory>) () ->
+                            Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME));
+        } else {
+            entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        }
+
         entityManager = entityManagerFactory.createEntityManager();
     }
 
