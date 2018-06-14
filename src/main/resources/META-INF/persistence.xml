@@ -15,7 +15,7 @@
             <property name="hibernate.connection.driver_class" value="org.h2.Driver" />
             <property name="hibernate.connection.username" value="" />
             <property name="hibernate.connection.password" value="" />
-            <property name="hibernate.connection.url" value="jdbc:h2:./example-db" />
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:test" />
             <property name="hibernate.max_fetch_depth" value="3" />
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
